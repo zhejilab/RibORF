@@ -15,8 +15,20 @@ use Getopt::Std;
 my %args; 
 getopt("gtosl",\%args);
 my $genome=$args{g}; 
+if (! $genome) {
+	print "No reference genome file"."\n";
+    exit;
+}
 my $genepred=$args{t}; 
+if (! $genepred) {
+	print "No reference transcriptome annotation file"."\n";
+    exit;
+}
 my $outdir=$args{o}; 
+if (! $outdir) {
+	print "No output directory"."\n";
+    exit;
+}
 my $scodon=$args{s}; 
 my $lenoff=$args{l};
 

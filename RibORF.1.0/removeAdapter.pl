@@ -14,10 +14,21 @@ use Getopt::Std;
 my %args; 
 getopt("faol",\%args);
 my $file=$args{f};
+if (! $file) {
+	print "No raw read file"."\n";
+    exit;
+}
 my $adapter=$args{a};
+if (! $adapter) {
+	print "No adapter sequence"."\n";
+    exit;
+}
 my $outputFile=$args{o};
+if (! $outputFile) {
+	print "No output file"."\n";
+    exit;
+}
 my $cutoff=$args{l};
-
 if (! $cutoff) {
 	$cutoff=15;
 }

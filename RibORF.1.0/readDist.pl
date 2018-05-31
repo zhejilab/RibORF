@@ -2,7 +2,7 @@ if ($#ARGV < 2) {
 	print "## Calcualte read distribution around CDS start and stop codons"."\n";
 	print "usage: perl readDist.pl -f readFile -g geneFile -o outputDir [-d readLength] [-l leftNum] [-r rightNum]"."\n";
 	print "-f readFile: read alignments to the transcriptome and reference genome, in SAM format;"."\n";
-	print "-g geneFile: canonical protein-coding ORF annotation, in genepred format;"."\n";
+	print "-g geneFile: ORF annotation file in genepred format;"."\n";
 	print "-o outputDir: output directory;"."\n";
 	print "-d readLength [optional]: specified RPF length, default: 25,26,27,28,29,30,31,32,33,34,;"."\n";
 	print "-l leftNum [optional]: N nucleotides upstream start codon and downstream stop codon, default: 30;"."\n";
@@ -17,8 +17,20 @@ my %args;
 getopt("fgodlr",\%args);
 
 my $readfile=$args{f};
+if (! $readfile) {
+	print "No read mapping file"."\n";
+    exit;
+}
 my $geneFile=$args{g};
+if (! $geneFile) {
+	print "No ORF annotation file"."\n";
+    exit;
+}
 my $outputDir=$args{o};
+if (! $geneFile) {
+	print "No output directory"."\n";
+    exit;
+}
 my $lenDist=$args{d};
 my $start=$args{l};
 my $end=$args{r};

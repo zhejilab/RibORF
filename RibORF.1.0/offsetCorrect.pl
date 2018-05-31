@@ -14,8 +14,20 @@ my %args;
 getopt("fpo",\%args);
 
 my $readfile=$args{f};
+if (! $readfile) {
+	print "No read mapping file"."\n";
+    exit;
+}
 my $offFile=$args{p};
+if (! $offFile) {
+	print "No parameter file for offset correction"."\n";
+    exit;
+}
 my $outputFile=$args{o};
+if (! $outputFile) {
+	print "No outpout file"."\n";
+    exit;
+}
 
 my %dist;
 open (AN, "$offFile");

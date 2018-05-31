@@ -2,7 +2,7 @@ if ($#ARGV < 2) {
 	print "##ribORF predication"."\n";
 	print "usage: perl ribORF.pl -f readCorrectedFile -c candidateORFFile -o outputDir [-l orfLengthCutoff] [-r orfReadCutoff] [-p predictPvalueCutoff]"."\n";
 	print "-f readCorrectedFile: input read mapping file after offset correction;"."\n";
-	print "-c candidateORFFile: candidate ORFs, genePred format;"."\n";
+	print "-c candidateORFFile: candidate ORFs in genePred format;"."\n";
 	print "-o outputDir: output directory, with files reporting testing parameters and predicted translating probability;"."\n";
 	print "-l orfLengthCutoff [optional]: cutoff of ORF length (nt), default: 6;"."\n";
 	print "-r orfReadCutoff [optional]: cutoff of supported read number, default: ;"."\n";
@@ -17,8 +17,20 @@ use Getopt::Std;
 my %args; 
 getopt("fcolrp",\%args);
 my $readfile=$args{f};
+if (! $readfile) {
+	print "No corrected read mapping file"."\n";
+    exit;
+}
 my $orfFile=$args{c};
+if (! $orfFile) {
+	print "No candidate ORF annotation file"."\n";
+    exit;
+}
 my $outputDir=$args{o};
+if (! $outputDir) {
+	print "No output directory"."\n";
+    exit;
+}
 my $orfLengthCutoff;
 my $orfReadCutoff;
 my $predictPvalueCutoff;
