@@ -238,4 +238,3 @@ close RE;
 my $comm="Rscript $outputDir/sta.readDist.plot.$lenDist.R";
 system ($comm);
 
-

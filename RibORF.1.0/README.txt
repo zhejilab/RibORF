@@ -145,4 +145,3 @@ auc(fpr,tpr, type = 'spline')
 
 Many candidate ORFs can overlap with each other with the same stop codon and different start codons. In this case, a representative ORF is selected based on the following criteria: we first pick AUG as start codons if present, and we then choose 5’ most start codon as the representative one. But if there is no read between the picked one and the next downstream candidate, we choose the next one as the representative start codon. The output files “repre.valid.pred.pvalue.parameters.txt” and “repre.valid.ORF.genepred.txt” contain the information of representative ORFs
 
-
