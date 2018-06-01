@@ -6,7 +6,7 @@ Materials:
 Ribosome profiling datasets in Fastq format;
 Genome assembly file in Fasta format;
 Ribosomal RNA (rRNA) sequence file in Fasta format;
-Transcript definition file in genePred format;
+Transcript annotation file in genePred format;
 Linux high performance computing cluster;
 Perl program installation;
 R program installation in the PATH;
@@ -35,7 +35,7 @@ gtfToGenePred gencode.v28.annotation.gtf gencode.v28.annotation.genePred.txt
 2c. Run “ORFannotate.pl” and generate candidate ORFs in genePred format. 
 perl ORFannotate.pl -g GRCh38.primary_assembly.genome.fa -t gencode.v28.annotation.genePred.txt -o outputDir
 
-There will be 2 files generated in the output directory, including “candidateORF.genepred.txt” with candidate ORFs in genePred format, and “candidateORF.fa” with candidate ORF sequences in Fasta format. We named the candidate ORFs with the following format: “TranscriptID:chromatin:strand|RankNumber|transcriptLength:startCodonPosition: stopCodonPosition|candidateORFType|startCodonType” (as an example: ENST00000420190.6:chr1:+|1|1578:87:357|uORF|TTG). 
+There will be 2 files generated in the output directory, including “candidateORF.genepred.txt” with candidate ORFs in genePred format, and “candidateORF.fa” with candidate ORF sequences in Fasta format. We generated the candidate ORF IDs with the following format: “TranscriptID:chromatin:strand|RankNumber|transcriptLength:startCodonPosition: stopCodonPosition|candidateORFType|startCodonType” (as an example: ENST00000420190.6:chr1:+|1|1578:87:357|uORF|TTG). 
 
 For the genePred format, each row contains the following information of a transcript (take “ENST00000377898.3” as an example): 
 “Name of transcript”: ENST00000377898.3
@@ -53,7 +53,7 @@ For the genePred format, each row contains the following information of a transc
 
 Usage: perl removeAdapter.pl -f fastqFile -a adapterSequence -o outputFile [-l readLengthCutoff]
    -f fastqFile: raw sequencing reads in fastq format;
-   -a adapterSequence: sequence of 3’ adapters, 10nt is recommended;
+   -a adapterSequence: sequence of 3’ adapters, first 10nt is recommended;
    -o outputFile: output file;
    -l readLengthCutoff [optional]: minimal read length after trimming 3’ adapters, default is 15nt.
 
@@ -70,17 +70,17 @@ Example commands:
 4b. Use Bowtie to index rRNA sequences. 
 bowtie2-build human.ribosomal.rna.fa hg.ribosome
 4c. Align trimmed ribosome profiling reads from step 3b to rRNAs, and obtain non-rRNA reads.
-bowtie2 -x hg.ribosome -U adapter.SRR1802129.fastq --un norrna.adapter.SRR1802129.fastq -S ribosome.adapter.SRR1802129.fastq
+bowtie2 -x hg.ribosome -U adapter.SRR1802146.fastq --un norrna.adapter.SRR1802146.fastq -S ribosome.adapter.SRR1802146.fastq
 4d. Align non-rRNA reads to the reference transcriptome and genome, and obtain the alignment file in SAM format.
-tophat --GTF gencode.v28.annotation.gtf --no-convert-bam -o outputDir GRCh38genome.index  norrna.adapter.SRR1802131.fastq
+tophat --GTF gencode.v28.annotation.gtf --no-convert-bam -o outputDir GRCh38genome.index  norrna.adapter.SRR1802146.fastq
 
 5. Run “readDist.pl” to group reads based on fragment length, and check the distance between 5' ends of the reads around start and stop codons of canonical ORFs of mRNAs. The length of ribosome protected fragments is ~30nt. Users can specify the fragment length (i.e. 28,29,30), and examine read distribution. 
 
-During ribosome profiling, RNase I cannot always completely digest RNA regions unprotected by protein complexes. As a result, some reads do not show clear 3-nt periodicity across ORFs, and these reads cannot be used to identify genome-wide actively translated ORFs. It is important to examine the read distribution across canonical ORFs of mRNAs, and ensure that reads show clear 3-nt periodicity. 
+During ribosome profiling, RNase I cannot always completely digest RNA regions unprotected by protein complexes. As a result, some reads do not show clear 3-nt periodicity across ORFs, and these reads cannot be used to identify genome-wide translated ORFs. It is important to examine the read distribution across canonical ORFs of mRNAs, and ensure that reads show clear 3-nt periodicity. 
 
 Usage: perl readDist.pl -f readFile -g geneFile -o outputDir [-d readLength] [-l leftNum] [-r rightNum]
-   -f readFile: read alignments to the reference transcriptome and genome, in SAM format;
-   -g geneFile: canonical protein-coding ORF annotation file, in genePred format;
+   -f readFile: read alignments to the reference transcriptome and genome in SAM format;
+   -g geneFile: canonical protein-coding ORF annotation file in genePred format;
    -o outputDir: output directory;
    -d readLength [optional]: specified RPF length (nt), default: 25,26,27,28,29,30,31,32,33,34,;
    -l leftNum [optional]: N nucleotides upstream start codon and downstream stop codon, default: 30;
@@ -89,9 +89,9 @@ Usage: perl readDist.pl -f readFile -g geneFile -o outputDir [-d readLength] [-l
 Example command: 
 perl readDist.pl -f SRR1802146.mapping.sam -g gencode.v28.annotation.genePred.txt -o outputDir -d 28,29,30, -l 40 -r 70
 
-Several files will be generated in the output directory. “plot.readDist.*.pdf” shows the plot of read distribution around start and stop codons of canonical ORFs. “read.dist.sample.*.txt” shows numeric read densities around codons, indicated by read per million values (RPM) values. “sta.read.dist.*.txt” contains read number statistics, and fractions of reads in each nucleotide of codons (1st, 2nd and 3rd). High quality reads show clear 3-nt periodicity, with high percentage of reads in 1st nucleotide of codons (>50% is recommended). Low quality reads which do not show obvious 3-nt periodicity, cannot be used for further analyses. 
+Several files will be generated in the output directory. “plot.readDist.*.pdf” shows the plot of read distribution around start and stop codons of canonical ORFs. “read.dist.sample.*.txt” shows numeric read densities around codons, indicated by read per million (RPM) values. “sta.read.dist.*.txt” contains read number statistics, and fractions of reads in each nucleotide of codons (1st, 2nd and 3rd). High quality reads show clear 3-nt periodicity, with high percentage of reads in 1st nucleotides of codons (>50% is recommended). Low quality reads do not show obvious 3-nt periodicity, and cannot be used for further analyses. 
 
-6. Run “offsetCorrect.pl” and correct read locations based on offset distances between 5’ ends and ribosomal A-sites. The offset distances can be inferred from the plots from the step 5. Based on the read distribution around start and stop codon of canonical ORFs, users can manually check the offset distances between 5’ ends of the reads and ribosomal A-site. I suggest users manually check the read distribution plots and ensure the data quality. Put correction parameters in a file, i.g. "offset.corretion.parameters.txt", which contains 2 columns. The first column contains the read fragment length, and the second column shows the offset distance. Ribosomal profiling experiments can have different offset correction parameters. 
+6. Run “offsetCorrect.pl” and correct read locations based on offset distances between 5’ ends and ribosomal A-sites. The offset distances can be inferred from the plots from step 5. Based on the read distribution around start and stop codon of canonical ORFs, users can manually check the offset distances between 5’ ends of the reads and ribosomal A-site. Users can manually check the read distribution plots and ensure the data quality. Put correction parameters in a file, i.g. "offset.corretion.parameters.txt", with 2 columns. The first column shows the read fragment length, and the second column shows the offset distance. Ribosomal profiling experiments can have different offset correction parameters. 
 
 Usage: perl offsetCorrect.pl -r readFile -p offsetParameterFile -o readCorrectedFile
    -r readFile: read mapping file before offset correction in SAM format;
@@ -124,16 +124,16 @@ perl readDist.pl -f corrected.SRR1802146.mapping.sam -g gencode.v28.annotation.g
 Usage: perl ribORF.pl -f readCorrectedFile -c candidateORFFile -o outputDir [-l orfLengthCutoff] [-r orfReadCutoff] [-p predictPvalueCutoff]
    -f readCorrectedFile: input read mapping file after offset correction in SAM format;
    -c candidateORFFile: candidate ORFs in genePred format;
-   -o outputDir: output directory, with files reporting testing parameters and predicted translating probability;
+   -o outputDir: output directory, with files reporting learning parameters and predicted translating probability;
    -l orfLengthCutoff [optional]: cutoff of ORF length (nt), default: 6;
    -r orfReadCutoff [optional]: cutoff of supported read number, default: 11.
    -p predictPvalueCutoff [optional]: cutoff used to select predicted translated ORF, default: 0.7.
 
 Example: perl ribORF.pl -f corrected.SRR1802146.mapping.sam -c candidateORF.genepred.txt -o outputDir
 
-A few output files will be generated. “pred.pvalue.parameters.txt” contains training parameters for candidate ORFs and predicted P-values. The columns include the following: candidate ORF ID (orfID), chromosome (chrom), strand, start codon location (codon5), stop codon location (codon3), ORF length, supporting read number (readNum), fraction of reads in 1st nucleotides of codons (f1), fraction of reads in 2nd nucleotides of codons (f2), fraction of reads in 3rd nucleotides of codons (f3), entropy value of read distribution (entropy), maximum entropy value of randomized even distribution (MAXentropy), percentage of maximum entropy value (PME), number of codons with sequencing reads (codonNum), fraction of codons with 1st nucleotides containing more reads than 2nd and 3rd (f1max), and predicted translated probability (pred.pvalue). The predicted translated P-value for each candidate ORFs was calculated using logistic regression, and was based on 3 input parameters, including f1, PME and f1max. 
+A few output files will be generated. “pred.pvalue.parameters.txt” contains training parameters for candidate ORFs and predicted P-values. The columns include the following: candidate ORF ID (orfID), chromosome (chrom), strand, start codon location (codon5), stop codon location (codon3), ORF length, supporting read number (readNum), fraction of reads in 1st nucleotides of codons (f1), fraction of reads in 2nd nucleotides of codons (f2), fraction of reads in 3rd nucleotides of codons (f3), entropy value of read distribution (entropy), maximum entropy value of randomized distribution (MAXentropy), percentage of maximum entropy value (PME), number of codons with sequencing reads (codonNum), fraction of codons with 1st nucleotides containing more reads than 2nd and 3rd (f1max), and predicted translated probability (pred.pvalue). The predicted translated P-value for each candidate ORFs was calculated using logistic regression, and was based on 3 input parameters, including f1, PME and f1max. 
 
-The predicted translated P-values represent the binary classification of the candidate ORFs. The values can be smaller than 0 or be great than 1. P-values closer to 1 represents that the ORF is likely to be translated. Users can select the cutoff P-value to define translated ORFs. “stat.cutoff.txt” file contains the cutoffs and associated statistics of true positive, false positive, true negative and false negative estimations. Users can take the numbers as the reference to pick appropriate cutoff. “plot.ROC.curve.pdf” contains the CDF plot based on “false positive rates” and “true positive rates” from the “stat.cutoff.txt” file. Users can use the following R script to estimate Area Under ROC Curve (AUC) value. As an option, users can run the following R script to get the ROC curve and AUC value, and the R script requires “MESS” package installation.
+The predicted translated P-values represent the binary classification of the candidate ORFs. The values can be smaller than 0 or be great than 1. P-values closer to 1 represents that the ORF is likely to be translated. Users can select the cutoff P-value to define translated ORFs. “stat.cutoff.txt” file contains the cutoffs and associated statistics of true positive, false positive, true negative and false negative estimations. Users can take the numbers as the reference to pick appropriate cutoff. “plot.ROC.curve.pdf” contains the ROC curve plot based on “false positive rates” and “true positive rates” from the “stat.cutoff.txt” file. Users can use the following R script to estimate Area Under ROC Curve (AUC) value. Users can run the following R script to get the ROC curve and AUC value, and the R script requires “MESS” package installation.
 
 A <- read.table ("stat.cutoff.txt", sep="\t", header=T)
 fpr <- A[,6]
