@@ -1,7 +1,7 @@
 if ($#ARGV < 2) {
 	print "## Correct the offset between 5' end of fragments and A-site"."\n";
-	print "usage: perl offsetCorrect.pl -f readFile -p offsetParameterFile -o readCorrectedFile"."\n";
-	print "-f readFile: read mapping file before offset correction, SAM format;"."\n";
+	print "usage: perl offsetCorrect.pl -r readFile -p offsetParameterFile -o readCorrectedFile"."\n";
+	print "-r readFile: read mapping file before offset correction, SAM format;"."\n";
 	print "-p offsetParameterFile: parameters for offset correction, 1st column: read length, 2nd column: offset distance;"."\n";
 	print "-o readCorrectedFile: output file after offset correction."."\n";
 	exit;
@@ -11,9 +11,9 @@ use Getopt::Std;
 
 ### get arguments ###
 my %args; 
-getopt("fpo",\%args);
+getopt("rpo",\%args);
 
-my $readfile=$args{f};
+my $readfile=$args{r};
 if (! $readfile) {
 	print "No read mapping file"."\n";
     exit;
