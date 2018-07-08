@@ -95,8 +95,8 @@ Several files will be generated in the output directory. “plot.readDist.*.pdf�
 
 6. Run “offsetCorrect.pl” and correct read locations based on offset distances between 5’ ends and ribosomal A-sites. The offset distances can be inferred from the plots from step 5. Based on the read distribution around the start and stop codon of canonical ORFs, users can manually check the offset distances between 5’ ends of the reads and ribosomal A-site. Users can manually check the read distribution plots and ensure the data quality. Put correction parameters in a file, i.g. "offset.corretion.parameters.txt", with 2 columns. The first column shows the read fragment length, and the second column shows the offset distance. Ribosomal profiling experiments can have different offset correction parameters. 
 
-Usage: perl offsetCorrect.pl -r readFile -p offsetParameterFile -o readCorrectedFile
-   -r readFile: read mapping file before offset correction in SAM format;
+Usage: perl offsetCorrect.pl -f readFile -p offsetParameterFile -o readCorrectedFile
+   -f readFile: read mapping file before offset correction in SAM format;
    -p offsetParameterFile: parameters for offset correction, 1st column: read length, 2nd column: offset distance;
    -o readCorrectedFile: output file after offset correction in SAM format. 
 
@@ -106,7 +106,7 @@ Example commands:
 29	16
 30	16
 6b. Run “offsetCorrect.pl”. 
-perl offsetCorrect.pl -r SRR1802146.mapping.sam -p offset.corretion.parameters.txt -o corrected. SRR1802146.mapping.sam
+perl offsetCorrect.pl -f SRR1802146.mapping.sam -p offset.corretion.parameters.txt -o corrected. SRR1802146.mapping.sam
 
 7. Run “readDist.pl” and check the corrected read locations around the start and stop codons of canonical ORFs. This step is to check whether read locations after offset correction show clear in-frame 3-nt periodicity. As the read length after offset correction is 1, put the parameter “-d” as “1”. 
 
