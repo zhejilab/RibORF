@@ -68,7 +68,7 @@ perl removeAdapter.pl -f SRR1802146.fastq -a CTGTAGGCAC -o adapter.SRR1802146.fa
 4. Map trimmed reads to rRNAs, and then map non-rRNA reads to the reference transcriptome and genome.
 
 Example commands:
-4a. Get human rRNA sequences from NCBI database, including 5S rRNA (NR_023363), 5.8S rRNA (NR_003285), 18S rRNA (NR_003286) and 28S rRNA (NR_003287). Put the rRNA sequences in the file “human.ribosomal.rna.fa” with fastq format.
+4a. Get human rRNA sequences from NCBI database, including 5S rRNA (NR_023363), 5.8S rRNA (NR_003285), 18S rRNA (NR_003286) and 28S rRNA (NR_003287). Put the rRNA sequences in the file “human.ribosomal.rna.fa” with fasta format.
 4b. Use Bowtie to index rRNA sequences. 
 bowtie2-build human.ribosomal.rna.fa hg.ribosome
 4c. Align trimmed ribosome profiling reads from step 3b to rRNAs, and obtain non-rRNA reads.
@@ -101,7 +101,7 @@ Usage: perl offsetCorrect.pl -r readFile -p offsetParameterFile -o readCorrected
    -o readCorrectedFile: output file after offset correction in SAM format. 
 
 Example commands: 
-6a. Generate the file “offset.corretion.parameters.txt”, with the content as following.
+6a. Generate the tab-delimited file “offset.corretion.parameters.txt”, with the content as following.
 28	15
 29	16
 30	16
