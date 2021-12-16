@@ -35,7 +35,7 @@ my $lenDist=$args{d};
 my $start=$args{l};
 my $end=$args{r};
 if (! $lenDist) {
-	$lenDist="25,26,27,28,29,30,31,32,33,34,";
+	$lenDist="18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,";
 }
 my %len;
 my @s=split /,/, $lenDist;
@@ -116,6 +116,7 @@ while (<AN>) {
 			} 
 		}
 	}
+	#if (($codon3-$codon5) > $end) {
 	if ($codon5 > $start && ($codon3-$codon5) > $end && ($#val-$codon3) > $start) {
 		$count5{"0"}++;
 		$count3{"0"}++;
@@ -142,25 +143,6 @@ while (<AN>) {
 			}
 		} 
 	}
-	if ($s1[2] eq '+') {
-		for (my $i=($codon5-18); $i<=$codon3; $i+=3) {
-			my $k1=$s1[1].":".$s1[2].":".$val[$i];
-			my $k2=$s1[1].":".$s1[2].":".$val[$i+1];
-			my $k3=$s1[1].":".$s1[2].":".$val[$i+2];
-			$sta{$readLength}[1]+=$read{$k1};
-			$sta{$readLength}[2]+=$read{$k2};
-			$sta{$readLength}[3]+=$read{$k3};
-		}
-	} else {
-		for (my $i=($codon3+18); $i>=$codon5; $i-=3) {
-			my $k1=$s1[1].":".$s1[2].":".$val[$i];
-			my $k2=$s1[1].":".$s1[2].":".$val[$i-1];
-			my $k3=$s1[1].":".$s1[2].":".$val[$i-2];
-			$sta{$readLength}[1]+=$read{$k1};
-			$sta{$readLength}[2]+=$read{$k2};
-			$sta{$readLength}[3]+=$read{$k3};
-		}
-	} 
 }
 close AN;
 
@@ -188,6 +170,22 @@ for (my $i=1; $i<=($end+$start+1); $i++) {
 }
 print OUT $out."\n";
 close OUT;
+
+for (my $i=($end+$start+1); $i>=$start; $i-=3) {
+	my $k1=$count5{$i};
+	my $k2=$count5{$i-1};
+	my $k3=$count5{$i-2};
+	my $tk=$k1+$k2+$k3;
+	if ($tk==0) {
+		$tk=3;
+		$k1=1;
+		$k2=1;
+		$k3=1;
+	}
+	$sta{$readLength}[1]+=$k1/$tk;
+	$sta{$readLength}[2]+=$k2/$tk;
+	$sta{$readLength}[3]+=$k3/$tk;
+}
 
 open (RI, ">$outputDir/readDist.plot.$readLength.R");
 print RI "A <- read.table (\"$outputDir/read.dist.sample.$readLength.txt\", sep=\"\\t\")"."\n";
@@ -222,6 +220,9 @@ open (ST, ">$outputDir/sta.read.dist.$lenDist.txt");
 print ST "fragment.length"."\t"."read.num"."\t"."frame1"."\t"."frame2"."\t"."frame3"."\n";
 foreach my $k (sort keys %sta) {
 	my $su=$sta{$k}[1]+$sta{$k}[2]+$sta{$k}[3];
+	if ($su==0) {
+		$su=1;
+	}
 	print ST $k."\t".$sta{$k}[0]."\t".sprintf("%.5f", $sta{$k}[1]/$su)."\t".sprintf("%.5f", $sta{$k}[2]/$su)."\t".sprintf("%.5f", $sta{$k}[3]/$su)."\n";
 }
 close ST;
