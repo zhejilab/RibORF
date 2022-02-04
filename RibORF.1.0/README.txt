@@ -20,7 +20,7 @@ Protocol steps
 
 2. Obtain genome annotation files, including the genome assembly file in Fasta format and reference transcriptome annotation file in genePred format. Run “ORFannotate.pl” to get candidate ORFs in transcripts. The program allows users to pick start codons types and select ORF length cutoff. The default setting considers 5 types of start codons “ATG/CTG/GTG/TTG/ACG”, which are most frequently used ones. The program also annotate candidate ORF types based on the transcript types and ORF locations in the transcripts, such as canonical ORFs, uORFs in 5’UTRs and internal off-frame ORFs in coding regions. 
 
-Usage: perl ORFcandidate.pl -g genomeSequenceFile -t transcriptomeFile -o outputDir  [-s startCodon] [-l orfLengthCutoff]
+Usage: perl ORFannotate.pl -g genomeSequenceFile -t transcriptomeFile -o outputDir  [-s startCodon] [-l orfLengthCutoff]
    -g genomeSequenceFile: the genome assembly file in fasta format;
    -t transcriptomeFile: the reference transcriptome annotation file in genePred format;
    -o outputDir: output directory;
