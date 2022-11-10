@@ -153,7 +153,7 @@ Many candidate ORFs can overlap with each other with the same stop codon and dif
 
 Usage: perl mergeORF.pl -f readCorrectedFile -c predictedORFFile -o outputDir
 	-f readCorrectedFile: input read mapping file after offset correction
-	-c predictedORFFile: predicted ORFs in genePred format
+	-c predictedORFFile: predicted ORFs in genePred format, different files were separated using '~'. 
 	-o outputDir: output directory
 
 Example: perl mergeORF.pl -f corrected.SRR1802146.mapping.sam -c folder1/cds.repre.valid.ORF.genepred.txt~folder2/cds.repre.valid.ORF.genepred.txt -o outputDir
