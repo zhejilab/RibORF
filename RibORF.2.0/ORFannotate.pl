@@ -122,15 +122,15 @@ while (<IN>) {
 					} elsif ($loc3 < $loc1 && $loc4 >= $loc1 && $loc4 < $loc2) {
 						$type="overlap.uORF";
 					} elsif ($loc3 >= $loc1 && $loc4 < $loc2) {
-						$type="internal";
+						$type="iORF";
 					} elsif ($loc3 > $loc1 && $loc3 < $loc2 && $loc4 > $loc2) {
-						$type="external";
+						$type="odORF";
 					} elsif ($loc3 > $loc1 && $loc4 == $loc2) {
 						$type="truncation";
 					} elsif ($loc3 < $loc1 && $loc4 == $loc2) {
 						$type="extension";
 					} elsif ($loc3 >= $loc2) {
-						$type="polycistronic";
+						$type="dORF";
 					} elsif ($loc3 == $loc1 && $loc4 != $loc2) {
 						$type="seqerror";
 					} elsif ($loc3 <= $loc1 && $loc4 > $loc2) {
