@@ -120,7 +120,7 @@ while (<IN>) {
 					} elsif ($loc3 < $loc1 && $loc4 < $loc1) {
 						$type="uORF";
 					} elsif ($loc3 < $loc1 && $loc4 >= $loc1 && $loc4 < $loc2) {
-						$type="overlap.uORF";
+						$type="ouORF";
 					} elsif ($loc3 >= $loc1 && $loc4 < $loc2) {
 						$type="iORF";
 					} elsif ($loc3 > $loc1 && $loc3 < $loc2 && $loc4 > $loc2) {
