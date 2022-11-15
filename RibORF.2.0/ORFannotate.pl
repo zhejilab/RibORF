@@ -124,13 +124,13 @@ while (<IN>) {
 					} elsif ($loc3 >= $loc1 && $loc4 < $loc2) {
 						$type="iORF";
 					} elsif ($loc3 > $loc1 && $loc3 < $loc2 && $loc4 > $loc2) {
-						$type="odORF";
+						$type="odORF"; # external in the previous version
 					} elsif ($loc3 > $loc1 && $loc4 == $loc2) {
 						$type="truncation";
 					} elsif ($loc3 < $loc1 && $loc4 == $loc2) {
 						$type="extension";
 					} elsif ($loc3 >= $loc2) {
-						$type="dORF";
+						$type="dORF"; # polycistronic in the previous version
 					} elsif ($loc3 == $loc1 && $loc4 != $loc2) {
 						$type="seqerror";
 					} elsif ($loc3 <= $loc1 && $loc4 > $loc2) {
