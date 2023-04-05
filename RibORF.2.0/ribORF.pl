@@ -201,7 +201,7 @@ close OUT;
 open (RI, ">$outputDir/ribORF.learning.R");
 print RI "A <- read.table (\"$outputDir/input.parameters.txt\", sep=\"\\t\", header=T)"."\n";
 print RI "B1 <- A[grepl('canonical', A[,1]),]"."\n";
-print RI "B2 <- A[grepl('internal', A[,1]),]"."\n";
+print RI "B2 <- A[grepl('iORF', A[,1]),]"."\n";
 print RI "B3 <- A[A\$PME < 0.1,]"."\n";
 print RI "C1 <- data.frame(cbind(B1, gr=rep(1, nrow(B1))))"."\n";
 print RI "C2 <- data.frame(cbind(B2, gr=rep(0, nrow(B2))))"."\n";
