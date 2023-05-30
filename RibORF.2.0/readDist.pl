@@ -217,7 +217,7 @@ system ($comm);
 }
 
 open (ST, ">$outputDir/sta.read.dist.$lenDist.txt");
-print ST "fragment.length"."\t"."read.num"."\t"."frame1"."\t"."frame2"."\t"."frame3"."\n";
+print ST "fragment.length"."\t"."read.num"."\t"."frame2"."\t"."frame3"."\t"."frame1"."\n";
 foreach my $k (sort keys %sta) {
 	my $su=$sta{$k}[1]+$sta{$k}[2]+$sta{$k}[3];
 	if ($su==0) {
